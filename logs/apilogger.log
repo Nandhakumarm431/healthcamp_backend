@@ -1,0 +1,8 @@
+{"level":"error","message":"Multer error: Unexpected field","timestamp":"2024-11-12T03:49:40.286Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1731384205503-picture213.png","timestamp":"2024-11-12T04:03:27.172Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1731384278101-picture213.png","timestamp":"2024-11-12T04:04:39.665Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1731384519988-picture213.png","timestamp":"2024-11-12T04:08:41.878Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1731384573305-picture213.png","timestamp":"2024-11-12T04:09:34.965Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1731384617664-picture213.png","timestamp":"2024-11-12T04:10:19.173Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1731384673629-picture213.png","timestamp":"2024-11-12T04:11:15.206Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1731384709139-picture213.png","timestamp":"2024-11-12T04:11:50.814Z"}
