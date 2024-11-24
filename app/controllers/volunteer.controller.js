@@ -110,7 +110,7 @@ const addVolunteerDetls = async (req, res) => {
                                     }
                                 }).then(volunteer => {
                                     camp.addVolunteerDetls(volunteer).then(() => {
-                                        const smsResult = sendVolunteerSMS(volunteer.contactNo, volunteer.volunteerName, camp.campDate, camp.city)
+                                        // const smsResult = sendVolunteerSMS(volunteer.contactNo, volunteer.volunteerName, camp.campDate, camp.city)
 
                                         res.json({
                                             status: "SUCCESS",
@@ -122,7 +122,7 @@ const addVolunteerDetls = async (req, res) => {
                         })
                     }
                     else {
-                        const smsResult = sendVolunteerSMS(volunteerDet.contactNo, volunteerDet.volunteerName, '', '')
+                        // const smsResult = sendVolunteerSMS(volunteerDet.contactNo, volunteerDet.volunteerName, '', '')
 
                         res.json({
                             status: "SUCCESS",

@@ -102,7 +102,7 @@ const addPatientDetls = async (req, res) => {
                                     }
                                 }).then(patient => {
                                     camp.addPatientDetls(patient).then(() => {
-                                        const smsResult = sendsms(patient.contactNo, patient.fullName, patient.patientID)
+                                        // const smsResult = sendsms(patient.contactNo, patient.fullName, patient.patientID)
                                         res.json({
                                             status: "SUCCESS",
                                             message: "Patient registered successfully!"
@@ -113,7 +113,7 @@ const addPatientDetls = async (req, res) => {
                         })
                     }
                     else {
-                        const smsResult = sendsms(patientDet.contactNo, patientDet.fullName, patientDet.patientID)
+                        // const smsResult = sendsms(patientDet.contactNo, patientDet.fullName, patientDet.patientID)
                         res.json({
                             status: "SUCCESS",
                             message: "Patient registered successfully!"
