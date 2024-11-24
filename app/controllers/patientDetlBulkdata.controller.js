@@ -27,8 +27,8 @@ const patientDetUpload = async (req, res) => {
         // Skip the header row
         rows.shift();
 
-        const prefixU = 'NHU';
-        const prefix = 'NHP';
+        const prefixU = 'HCU';
+        const prefix = 'HCP';
 
         // Fetch the 'Patient' role data
         const roleData = await RoleDB.findOne({ where: { name: 'Patient' }, attributes: ['id'] });

@@ -36,7 +36,7 @@ const addPatientDetls = async (req, res) => {
                     message: "Invalid Age. Age cannot be negative."
                 });
             } else {
-                const prefixU = 'NHU'
+                const prefixU = 'HCU'
                 const AutoUserID = await getNextSerialNumber(prefixU);
                 var createPassword = req.body.fullName.substring(0, 4) + AutoUserID
                 let zipcode = Utils.preprocessZipcode(req.body.zipCode)
@@ -282,8 +282,8 @@ const patientDetUpload = async (req, res) => {
         readXlsxFile(path).then(async (rows) => {
             // skip header
             rows.shift();
-            const prefix = 'NHP'
-            const prefixU = 'NHU'
+            const prefix = 'HCP'
+            const prefixU = 'HCU'
             let roleData = await RoleDB.findOne({
                 where: { name: 'Patient' }, attributes: ['id']
             })

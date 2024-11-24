@@ -56,7 +56,7 @@ const adduserDetls = async (req, res) => {
                 const dobDate = new Date();
                 const yearDate = dobDate.getFullYear();
                 var createPassword = req.body.fullName.substring(0, 4) + yearDate
-                const prefix = 'NHU'
+                const prefix = 'HCU'
                 const serialNumber = await getNextSerialNumber(prefix);
 
                 

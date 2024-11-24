@@ -46,7 +46,7 @@ const addVolunteerDetls = async (req, res) => {
                     where: { name: 'Volunteer' }, attributes: ['id']
                 })
 
-                const prefix = 'NHU'
+                const prefix = 'HCU'
                 const serialNumber = await getNextSerialNumber(prefix);
                 var createPassword = req.body.fullName.substring(0, 4) + serialNumber
 
@@ -78,7 +78,7 @@ const addVolunteerDetls = async (req, res) => {
                 }
                 const data = await userDB.create(userDetl);
 
-                const prefixV = 'NHV'
+                const prefixV = 'HCV'
                 const serialVNumber = await getNextSerialNumber(prefixV);
 
                 volunteerDB.create({

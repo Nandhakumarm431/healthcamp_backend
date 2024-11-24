@@ -52,7 +52,7 @@ exports.signup = async (req, res) => {
   //   });
   // }
   else {
-    const prefix = 'NHU'
+    const prefix = 'HCU'
     const serialNumber = await getNextSerialNumber(prefix);
     User.create({
       userID: serialNumber,

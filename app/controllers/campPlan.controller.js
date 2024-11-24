@@ -28,7 +28,7 @@ const addCampDetails = async (req, res) => {
         });
     } else {
         try {
-            const prefix = 'NHC'
+            const prefix = 'HCC'
             const serialNumber = await getNextSerialNumber(prefix);
             // const timeSlots = Utils.createTimeSlots(req.body.startTime, req.body.endTime);
             let payload = {
