@@ -166,7 +166,7 @@ const getOneCampDet = async (req, res) => {
                         attributes: ['id', 'name']
                     }]
                 }]
-            }]
+            }] 
         })
         res.json({
             status: "SUCCESS",

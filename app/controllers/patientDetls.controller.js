@@ -17,7 +17,7 @@ const addPatientDetls = async (req, res) => {
         let roleData = await RoleDB.findOne({
             where: { name: 'Patient' }, attributes: ['id']
         })
-        if (!req.body.fullName || !req.body.contactNo || !req.body.gender
+        if (!req.body.patientFullName || !req.body.contactNo || !req.body.gender
             || !req.body.age) {
             res.status(400).send({
                 status: "FAILED",
@@ -38,11 +38,11 @@ const addPatientDetls = async (req, res) => {
             } else {
                 const prefixU = 'HCU'
                 const AutoUserID = await getNextSerialNumber(prefixU);
-                var createPassword = req.body.fullName.substring(0, 4) + AutoUserID
+                var createPassword = req.body.patientFullName.substring(0, 4) + AutoUserID
                 let zipcode = Utils.preprocessZipcode(req.body.zipCode)
                 let userDetl = {
                     userID: AutoUserID,
-                    fullName: req.body.fullName,
+                    fullName: req.body.patientFullName,
                     contactNo: req.body.contactNo,
                     email: req.body.email,
                     street: req.body.address,
@@ -64,7 +64,7 @@ const addPatientDetls = async (req, res) => {
                 patientDetlsDB.create({
                     userId: data.id,
                     patientID: serialPNumber,
-                    patientFullName: req.body.fullName,
+                    patientFullName: req.body.patientFullName,
                     age: req.body.age,
                     gender: req.body.gender,
                     bloodgroup: req.body.bloodgroup,

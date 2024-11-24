@@ -51,6 +51,8 @@ const addVolunteerDetls = async (req, res) => {
                 var createPassword = req.body.fullName.substring(0, 4) + serialNumber
 
                 let zipcode = Utils.preprocessZipcode(req.body.zipCode)
+                console.log('zipcode',zipcode);
+                
 
                 let dateofBirth = req.body.dateOfBirth;
                 if (!dateofBirth || !Utils.isValidDate(dateofBirth)) {
@@ -71,8 +73,8 @@ const addVolunteerDetls = async (req, res) => {
                     roleId: roleData.id,
                     password: bcrypt.hashSync(createPassword, 8),
                     password2: bcrypt.hashSync(createPassword, 8),
-                    organizer_Id: 2,
-                    organizationDetId: 2,
+                    organizer_Id: 1,
+                    organizationDetId: 1,
                     isActive: true,
                     isDeleted: false
                 }
