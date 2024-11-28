@@ -16,7 +16,7 @@ module.exports = app => {
     app.put('/deleteCamp/:id', campDetAPI.deleteCampDet)
 
     app.post('/assignCampUsers', campDetAPI.assignCamptoUser)
-    app.post("/upload", upload.single("file"), campDetAPI.campDetUpload);
+    // app.post("/upload", upload.single("file"), campDetAPI.campDetUpload);
     app.post("/uploadCSV", uploadcsv.single("file"), campDetAPI.csvUpload);
 
     app.get('/count-by-month',campDetAPI.mnthwiseCampPatientCount)

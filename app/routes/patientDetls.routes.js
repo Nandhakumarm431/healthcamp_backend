@@ -1,9 +1,10 @@
+const uploadMiddleware = require('../middleware/upload.js');
+
 module.exports = app => {
 
     const patientDetAPI = require('../controllers/patientDetls.controller')
     const patientReportAPI = require('../controllers/patientReports.controller')
 
-    const upload = require("../middleware/upload.js");
     const uploadcsv = require("../middleware/uploadcsv.js");
     const uploadReports = require("../middleware/uploadReports.js");
 
@@ -23,7 +24,7 @@ module.exports = app => {
     app.post("/uploadCSV", uploadcsv.single("file"), patientDetAPI.csvUpload);
 
     const patientBulkUploadAPI = require('../controllers/patientDetlBulkdata.controller.js')
-    app.post("/patientUpload", upload.single("file"), patientBulkUploadAPI.patientDetUpload);
+    app.post("/patientUpload", uploadMiddleware, patientBulkUploadAPI.patientDetUpload);
 
     app.post("/uploadReport", uploadReports, patientReportAPI.uploadPatientReports);
     app.get('/getPatientReports/:patientID', patientReportAPI.getAllPatientReports)

@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const { getNextSerialNumber } = require('./SerialNumber.controller');
 const db = require('../models');
 const Utils = require('../utill/Utils');
+const axios = require('axios');
 
 const patientDetlsDB = db.patientDetls;
 const campDB = db.campPlanning;
@@ -14,12 +15,30 @@ const patientDetUpload = async (req, res) => {
         if (!req.file) {
             return res.status(400).send("Please upload an Excel file!");
         }
-
+        const file = req.file;
         const userid = req.body.userid;
-        const path = `${__basedir}/resources/static/assets/uploads/${req.file.filename}`;
+        // const path = `${__basedir}/resources/static/assets/uploads/${req.file.filename}`;
+        let fileUrl;
+        fileUrl = file.location;
+
+        const lambdaUrl = process.env.AWS_LAMBDA_URL_DOWNLOAD_FILE;
+
+        // Request presigned URL from Lambda function
+        const lambdaResponse = await axios.post(lambdaUrl, { file_path: file.name });
+
+        if (!lambdaResponse.data || !lambdaResponse.data.download_url) {
+            console.error(`Failed to fetch presigned URL for file: ${file.name}`);
+            return res.status(500).send({ error: "Failed to fetch presigned URL" });
+        }
+
+        const presignedUrl = lambdaResponse.data.download_url;
+
+        // Fetch file from S3 using presigned URL
+        const fileResponse = await axios.get(presignedUrl, { responseType: "arraybuffer" });
+        const fileBuffer = Buffer.from(fileResponse.data);
 
         // Read the Excel file
-        const rows = await readXlsxFile(path);
+        const rows = await readXlsxFile(fileBuffer);
         if (!rows.length) {
             return res.status(400).send("Excel file is empty or improperly formatted.");
         }
@@ -48,6 +67,7 @@ const patientDetUpload = async (req, res) => {
 
             // Validate Camp ID
             const campExists = await campDB.findOne({ where: { campID } });
+
             if (!campExists) {
                 return res.status(400).send({
                     message: `Camp ID ${campID} not found. No records will be added.`

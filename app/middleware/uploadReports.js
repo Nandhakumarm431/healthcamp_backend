@@ -62,6 +62,7 @@ async function uploadReports(req, res, next) {
 
             // Attach the S3 URL to the request for further processing
             req.file.location = s3Response.Location;
+            req.file.name = s3Key;
             next();
         } catch (s3Err) {
             logger.error(`Failed to upload file to S3: ${s3Err.message}`);
