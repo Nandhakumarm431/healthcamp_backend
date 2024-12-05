@@ -139,7 +139,7 @@ const getPatientDetls = async (req, res) => {
 
     let patnDetls = await patientDetlsDB.findAll({
         where: { activeStatus: true },
-        order: [['id', 'ASC']],
+        order: [['id', 'DESC']],
         include: [
             {
                 model: userDB,
@@ -156,12 +156,12 @@ const getPatientDetls = async (req, res) => {
 }
 const getpatientCampDet = async (req, res) => {
     try {
-        let campPatientDet = await patientDetlsDB.findAll({
+        let PatientDet = await patientDetlsDB.findOne({
             where: {
                 activeStatus: true,
-                campId: req.params.campId
+                id: req.params.id
             },
-            order: [['id', 'ASC']],
+            order: [['id', 'DESC']],
             include: [
                 {
                     model: userDB,
@@ -169,7 +169,7 @@ const getpatientCampDet = async (req, res) => {
                     attributes: ['id', 'fullName']
                 }]
         })
-        res.status(200).send(campPatientDet)
+        res.status(200).send(PatientDet)
     }
     catch (error) {
         res.json({
@@ -209,7 +209,7 @@ const updatePatientDetls = async (req, res) => {
     let id = req.params.id
     try {
         if (req.body.fullName == "" || req.body.contactNO == "" || req.body.gender == ""
-            || req.body.age == "" || req.body.bloodgroup == "") {
+            || req.body.age == "") {
             res.status(400).send({
                 status: "FAILED",
                 message: "Empty Input fields!"

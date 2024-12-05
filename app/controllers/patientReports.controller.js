@@ -3,6 +3,15 @@ const patientDB = db.patientDetls
 const patientReportDB = db.patientReports
 const fs = require('fs');
 const path = require('path');
+const AWS = require('aws-sdk');
+const axios = require('axios');
+
+AWS.config.update({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION || 'us-east-1',
+});
+const s3 = new AWS.S3();
 
 const uploadPatientReports = async (req, res) => {
     try {
@@ -18,17 +27,18 @@ const uploadPatientReports = async (req, res) => {
             }
         }).then(async patient => {
             let fileUrl;
-            fileUrl = file.location; // S3 file URL provided in the middleware
-
+            fileUrl = file.location;
             const newReport = await patientReportDB.create({
                 patientDetlId: patient.id,
                 reportFileName: file.name,
+                reportFilePath: file.path,
                 reporDownloadtUrl: fileUrl,
                 reportType: reportType,
                 description: description,
                 reportfileSize: file.size,
                 userId: userId,
                 uploadedBy: userId,
+                isDeleted: false,
                 reportUploadDate: new Date()
             });
 
@@ -39,20 +49,6 @@ const uploadPatientReports = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
-async function downloadFileFromShare(shareName, directoryName, fileName, downloadPath) {
-    const shareServiceClient = ShareServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
-    const shareClient = shareServiceClient.getShareClient(shareName);
-    const directoryClient = shareClient.getDirectoryClient(directoryName);
-    const fileClient = directoryClient.getFileClient(fileName);
-    const exists = await fileClient.exists();
-    if (!exists) {
-        throw new Error(`File "${fileName}" not found in directory "${directoryName}".`);
-    }
-    const downloadFilePath = path.join(downloadPath, fileName);
-    await fileClient.downloadToFile(downloadFilePath);
-    return downloadFilePath;
-}
 
 const downloadReports = async (req, res) => {
     try {
@@ -66,15 +62,42 @@ const downloadReports = async (req, res) => {
         };
         s3.getObject(params, (err, data) => {
             if (err) {
-                logger.warn(`Audio file not found: ${filename}`);
-                return res.status(404).json({ 'Audio file not found': err });
+                return res.status(404).json({ 'File not found': err });
             }
-            res.setHeader('Content-Type', data.ContentType || 'audio/mpeg');
-            logger.info(`Playing audio file - ${filename}`);
+            res.setHeader('Content-Type', data.ContentType);
             res.send(data.Body);
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+};
+
+const downloadAttachments = async (req, res) => {
+    try {
+        const { filePath } = req.body;
+        if (!filePath) {
+            return res.status(400).json({ error: 'File path is required in the request body' });
+        }
+
+        //Lambda URL
+        const lambdaUrl = process.env.AWS_LAMBDA_URL_DOWNLOAD_FILE;
+        const lambdaResponse = await axios.post(lambdaUrl, { file_path: filePath });
+
+        if (!lambdaResponse.data || !lambdaResponse.data.download_url) {
+            return res.status(500).json({ error: 'Failed to fetch presigned URL' });
+        }
+
+        const presignedUrl = lambdaResponse.data.download_url;
+        const audioResponse = await axios.get(presignedUrl, { responseType: 'stream' });
+
+        // Set appropriate headers
+        res.setHeader('Content-Type', audioResponse.headers['content-type']);
+        res.setHeader('Content-Disposition', `inline; filename="${filePath.split('/').pop()}"`);
+
+        audioResponse.data.pipe(res);
+
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error', message: error.message });
     }
 };
 
@@ -92,8 +115,26 @@ const getAllPatientReports = async (req, res) => {
     }
 }
 
+const deleteAttachment = async (req, res) => {
+    let id = req.params.id
+    try {
+        const deletAtt = await patientReportDB.update({ isDeleted: true }, { where: { id: id } });
+        res.json({
+            status: "SUCCESS",
+            message: "Attachment details deleted"
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            message: "Delete failed",
+        });
+    }
+}
+
 module.exports = {
     uploadPatientReports,
     getAllPatientReports,
-    downloadReports
+    downloadAttachments,
+    downloadReports,
+    deleteAttachment
 }

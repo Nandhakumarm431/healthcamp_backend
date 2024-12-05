@@ -11,7 +11,7 @@ module.exports = app => {
     app.post('/addPatientDet', patientDetAPI.addPatientDetls)
     app.get('/getAllPatientDetls', patientDetAPI.getPatientDetls)
     app.get('/getCampPatientDetls', patientDetAPI.getPatientsCamps)
-    app.get('/getOnePatientDetls/:campId', patientDetAPI.getpatientCampDet)
+    app.get('/getOnePatientDetls/:id', patientDetAPI.getpatientCampDet)
 
     app.post('/getpatientusingMobileno', patientDetAPI.getpatientDetlswithPhoneNum)
 
@@ -28,6 +28,8 @@ module.exports = app => {
 
     app.post("/uploadReport", uploadReports, patientReportAPI.uploadPatientReports);
     app.get('/getPatientReports/:patientID', patientReportAPI.getAllPatientReports)
-    app.post("/downloadreport", patientReportAPI.downloadReports);
+    app.post("/downloadattachment", patientReportAPI.downloadAttachments);
+    app.put('/deleteAttachment/:id', patientReportAPI.deleteAttachment)
+
 
 }

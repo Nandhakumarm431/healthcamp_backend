@@ -6,3 +6,11 @@
 {"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1731384617664-picture213.png","timestamp":"2024-11-12T04:10:19.173Z"}
 {"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1731384673629-picture213.png","timestamp":"2024-11-12T04:11:15.206Z"}
 {"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1731384709139-picture213.png","timestamp":"2024-11-12T04:11:50.814Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1733204380003-text.pdf","timestamp":"2024-12-03T05:39:41.567Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1733213608978-text.pdf","timestamp":"2024-12-03T08:13:30.524Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1733213710955-text.pdf","timestamp":"2024-12-03T08:15:12.500Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1733231123002-dummy%20word%20file12as.docx","timestamp":"2024-12-03T13:05:24.279Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1733231190963-text.pdf","timestamp":"2024-12-03T13:06:32.509Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1733231378513-LC-EMAIL-UAT-081-merged.pdf","timestamp":"2024-12-03T13:09:39.792Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1733319506491-patientReports_1732466107112-text.pdf","timestamp":"2024-12-04T13:38:28.099Z"}
+{"level":"info","message":"File uploaded to S3: https://demo-lets-try.s3.amazonaws.com/patientReports/1733323702448-sample%20blood%20report.pdf","timestamp":"2024-12-04T14:48:23.838Z"}

@@ -1,4 +1,4 @@
-module.exports = (sequelize, Sequelize)=>{
+module.exports = (sequelize, Sequelize) => {
 
     function getCurrentISTDate() {
         const currentDate = new Date();
@@ -7,29 +7,35 @@ module.exports = (sequelize, Sequelize)=>{
         return new Date(utcOffset + istOffset);
     }
 
-    const patientReports = sequelize.define('patientReports',{
-       
-        reportFileName:{
-            type:Sequelize.STRING
+    const patientReports = sequelize.define('patientReports', {
+
+        reportFileName: {
+            type: Sequelize.STRING
         },
-        reporDownloadtUrl:{
-            type:Sequelize.STRING
+        reportFilePath: {
+            type: Sequelize.STRING
         },
-        reportType:{
-            type:Sequelize.STRING
+        reporDownloadtUrl: {
+            type: Sequelize.STRING
         },
-        description:{
-            type:Sequelize.STRING
+        reportType: {
+            type: Sequelize.STRING
         },
-        reportfileSize:{
-            type:Sequelize.BIGINT
+        description: {
+            type: Sequelize.STRING
         },
-        uploadedBy:{
+        reportfileSize: {
+            type: Sequelize.BIGINT
+        },
+        uploadedBy: {
             type: Sequelize.INTEGER
         },
         reportUploadDate: {
             type: Sequelize.DATE,
-            defaultValue: getCurrentISTDate 
+            defaultValue: getCurrentISTDate
+        },
+        isDeleted: {
+          type: Sequelize.BOOLEAN
         }
     })
     return patientReports;

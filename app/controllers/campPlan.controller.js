@@ -69,7 +69,7 @@ const getAllCampDetails = async (req, res) => {
     try {
         let campdet = await CampPlanDet.findAll({
             where: { activeStatus: true },
-            order: [['createdAt', 'ASC']],
+            order: [['createdAt', 'DESC']],
             include: [{
                 model: UserData,
                 as: 'users',
@@ -93,7 +93,7 @@ const getAllCampNames = async (req, res) => {
     try {
         let campdet = await CampPlanDet.findAll({
             where: { activeStatus: true },
-            order: [['createdAt', 'ASC']],
+            order: [['createdAt', 'DESC']],
             attributes: ['id', 'campID', 'campName']
         })
         res.status(200).send(campdet)
@@ -155,7 +155,7 @@ const getOneCampDet = async (req, res) => {
                 model: patientDB,
                 as: 'patientDetls',
                 where: { activeStatus: true },
-                order: [['id', 'ASC']],
+                order: [['id', 'DESC']],
                 include: [{
                     model: UserData,
                     as: 'users',
@@ -411,7 +411,7 @@ const generateCompleteReport = async (req, res) => {
                     attributes: ['volunteerID', 'volunteerName', 'dateOfBirth'],
                 },
             ],
-            order: [['campDate', 'ASC']],
+            order: [['campDate', 'DESC']],
         });
         // Create a new Excel workbook and worksheet
         const workbook = new ExcelJS.Workbook();
