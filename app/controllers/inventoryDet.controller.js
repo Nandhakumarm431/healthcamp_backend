@@ -1,12 +1,19 @@
-const db = require('../models')
+const db = require('../models');
 
 const InventoryDB = db.inventoryDet;
 const { getNextSerialNumber } = require('./SerialNumber.controller');
 
-const addInventoryDet = async (req, res) => {
+// Common error handler
+const handleError = (res, error, status = 500, message = "FAILED") => {
+    res.status(status).json({
+        status: "FAILED",
+        message: error.message || message
+    });
+};
 
+const addInventoryDet = async (req, res) => {
     try {
-        const prefix = 'NHIN'
+        const prefix = 'NHIN';
         const inventryID = await getNextSerialNumber(prefix);
 
         let payload = {
@@ -23,73 +30,60 @@ const addInventoryDet = async (req, res) => {
             created_by: req.body.userId,
             userId: req.body.userId,
             isActive: true
-        }
+        };
 
-        const data = await InventoryDB.create(payload);
-        res.json({
+        await InventoryDB.create(payload);
+        res.status(200).json({
             status: "SUCCESS",
             message: "Inventory Details created!"
         });
 
+    } catch (error) {
+        handleError(res, error);
     }
-    catch (error) {
-        res.json({
-            status: "FAILED",
-            message: error.message
-        });
-    }
-}
+};
 
 const getInventoryDetls = async (req, res) => {
-
     try {
         let inventoryDetls = await InventoryDB.findAll({
             where: { isActive: true },
             order: [['createdAt', 'ASC']]
-        })
-        res.send(200).send(inventoryDetls)
-    } catch (error) {
-        res.json({
-            status: "FAILED",
-            message: error
         });
+        res.status(200).json(inventoryDetls);
+    } catch (error) {
+        handleError(res, error);
     }
-}
+};
 
 const updateInventoryDet = async (req, res) => {
-    let id = req.params.id
-
+    let id = req.params.id;
     try {
-        const updateDet = await InventoryDB.update(req.body, { where: { id: id } });
-        res.json({
+        await InventoryDB.update(req.body, { where: { id: id } });
+        res.status(200).json({
             status: "SUCCESS",
             message: "Inventory details updated",
         });
     } catch (error) {
-        res.json({
-            status: "FAILED",
-            message: error
-        });
+        handleError(res, error);
     }
-}
+};
 
 const deleteInventory = async (req, res) => {
-    let id = req.params.id
-
+    let id = req.params.id;
     try {
-        const inventoryDet = await InventoryDB.update({ isActive: false }, { where: { id: id } });
-
-        res.json({
+        await InventoryDB.update({ isActive: false }, { where: { id: id } });
+        res.status(200).json({
             status: "SUCCESS",
             message: "Inventory details deleted"
         });
     } catch (error) {
-        res.status(500).send({
-            message: "Delete failed",
-        });
+        handleError(res, error, 500, "Delete failed");
     }
-}
+};
 
 module.exports = {
-    addInventoryDet, getInventoryDetls, updateInventoryDet, deleteInventory
-}
+    addInventoryDet,
+    getInventoryDetls,
+    updateInventoryDet,
+    deleteInventory
+};

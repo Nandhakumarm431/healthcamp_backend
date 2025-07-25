@@ -23,63 +23,65 @@ verifyToken = (req, res, next) => {
   });
 };
 
-
 isAdmin = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "admin") {
-          next();
-          return;
-        }
-      }
+  User.findByPk(req.userId, {
+    include: ['roles']
+  }).then(user => {
+    if (!user || !user.roles) {
+      return res.status(403).send({ message: "Role not found." });
+    }
 
-      res.status(403).send({
-        message: "Require Admin Role!"
-      });
-      return;
-    });
+    const roleName = user.roles.name?.toLowerCase();
+
+    if (["admin", "super admin"].includes(roleName)) {
+      return next();
+    }
+
+    return res.status(403).send({ message: "Require Admin Role!" });
+  }).catch(err => {
+    res.status(500).send({ message: err.message });
   });
 };
 
 isuser = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "user") {
-          next();
-          return;
-        }
-      }
+  User.findByPk(req.userId, {
+    include: ['roles']
+  }).then(user => {
+    if (!user || !user.roles) {
+      return res.status(403).send({ message: "Role not found." });
+    }
 
-      res.status(403).send({
-        message: "Require user Role!"
-      });
-    });
+    if (user.roles.name.toLowerCase() === 'user') {
+      return next();
+    }
+
+    return res.status(403).send({ message: "Require user Role!" });
+  }).catch(err => {
+    res.status(500).send({ message: err.message });
   });
 };
 
 isuserOrAdmin = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "user") {
-          next();
-          return;
-        }
+  User.findByPk(req.userId, {
+    include: ['roles']
+  }).then(user => {
+    if (!user || !user.roles) {
+      return res.status(403).send({ message: "Role not found." });
+    }
 
-        if (roles[i].name === "admin") {
-          next();
-          return;
-        }
-      }
+    const roleName = user.roles.name?.toLowerCase();
 
-      res.status(403).send({
-        message: "Require user or Admin Role!"
-      });
+    if (["admin", "user", "super admin"].includes(roleName)) {
+      return next();
+    }
+
+    return res.status(403).send({
+      message: "Require user or Admin Role!"
     });
   });
+
 };
+
 
 const authJwt = {
   verifyToken: verifyToken,

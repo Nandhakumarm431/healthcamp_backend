@@ -1,5 +1,6 @@
 const db = require('../models')
 const activityTypes = db.actvityTypes;
+
 const addTypes = async (req, res) => {
     let payload = {
         activityName: req.body.activityName,
@@ -14,7 +15,7 @@ const addTypes = async (req, res) => {
                 message: "Empty Input fields!"
             });
         }
-        else if (existData) {
+        else if (existData) { 
             res.json({
                 status: "FAILED",
                 message: "Activity type already present!"
@@ -33,6 +34,7 @@ const addTypes = async (req, res) => {
         });
     }
 }
+
 const getActivityDet = async (req, res) => {
     try {
         let actvityDet = await activityTypes.findAll()
@@ -44,6 +46,7 @@ const getActivityDet = async (req, res) => {
         });
     }
 }
+
 const updateActivities = async (req, res) => {
     let id = req.params.id
     try {
@@ -59,6 +62,7 @@ const updateActivities = async (req, res) => {
         });
     }
 }
+
 const deleteActivities = async (req, res) => {
     let id = req.params.id
     try {
@@ -74,6 +78,8 @@ const deleteActivities = async (req, res) => {
         });
     }
 }
+
+
 module.exports = {
     addTypes,
     getActivityDet,

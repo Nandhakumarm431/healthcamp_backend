@@ -328,32 +328,85 @@ const getUserCountsMonthbased = async (req, res) => {
     }
 }
 
+//for Posgresql DB query
+// const getCampPatientTotalCounts = async (req, res) => {
+//     try {
+//         const campData = await db.campPlanning.findAll({
+//             attributes: [
+//                 [Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('campDate')), 'month'], // Group by truncated month
+//                 'campName', // Include camp name
+//                 [Sequelize.fn('COUNT', Sequelize.col('patientDetls->patients_camps.patientId')), 'patientCount'],
+//             ],
+//             include: [
+//                 {
+//                     model: db.patientDetls,
+//                     through: { attributes: [] }, // Exclude fields from the junction table
+//                     attributes: [], // Exclude patient fields
+//                 },
+//             ],
+//             group: [
+//                 Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('campDate')), // Month grouping
+//                 'campPlanningDet.campName', // Group by camp name
+//                 'campPlanningDet.id', // Group by the primary key of campPlanning
+//             ],
+//             order: [[Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('campDate')), 'DESC']],
+//         });
+
+//         // Format the data into the desired structure
+//         const groupedData = campData.reduce((acc, camp) => {
+//             const month = camp.dataValues.month.toLocaleString('default', { month: 'long' }); // Convert to month name
+//             const campName = camp.campName;
+//             const patientCount = parseInt(camp.dataValues.patientCount, 10);
+
+//             if (!acc[month]) {
+//                 acc[month] = [];
+//             }
+
+//             acc[month].push({ name: campName, patientCount });
+//             return acc;
+//         }, {});
+
+//         // Transform grouped data into the final structure
+//         const result = Object.entries(groupedData).map(([month, camps]) => ({
+//             month,
+//             camps,
+//         }));
+
+//         res.json(result);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// };
+
+//for MySql DB query
 const getCampPatientTotalCounts = async (req, res) => {
     try {
         const campData = await db.campPlanning.findAll({
             attributes: [
-                [Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('campDate')), 'month'], // Group by truncated month
-                'campName', // Include camp name
+                [Sequelize.fn('DATE_FORMAT', Sequelize.col('campDate'), '%Y-%m'), 'month'],
+                'campName',
                 [Sequelize.fn('COUNT', Sequelize.col('patientDetls->patients_camps.patientId')), 'patientCount'],
             ],
             include: [
                 {
                     model: db.patientDetls,
-                    through: { attributes: [] }, // Exclude fields from the junction table
-                    attributes: [], // Exclude patient fields
+                    through: { attributes: [] },
+                    attributes: [],
                 },
             ],
             group: [
-                Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('campDate')), // Month grouping
-                'campPlanningDet.campName', // Group by camp name
-                'campPlanningDet.id', // Group by the primary key of campPlanning
+                Sequelize.fn('DATE_FORMAT', Sequelize.col('campDate'), '%Y-%m'),
+                'campPlanningDet.campName',
+                'campPlanningDet.id',
             ],
-            order: [[Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('campDate')), 'DESC']],
+            order: [[Sequelize.fn('DATE_FORMAT', Sequelize.col('campDate'), '%Y-%m'), 'DESC']],
         });
 
-        // Format the data into the desired structure
         const groupedData = campData.reduce((acc, camp) => {
-            const month = camp.dataValues.month.toLocaleString('default', { month: 'long' }); // Convert to month name
+            const monthStr = camp.dataValues.month; // 'YYYY-MM'
+            const dateObj = new Date(monthStr + '-01');
+            const month = dateObj.toLocaleString('default', { month: 'long', year: 'numeric' });
             const campName = camp.campName;
             const patientCount = parseInt(camp.dataValues.patientCount, 10);
 
@@ -365,7 +418,6 @@ const getCampPatientTotalCounts = async (req, res) => {
             return acc;
         }, {});
 
-        // Transform grouped data into the final structure
         const result = Object.entries(groupedData).map(([month, camps]) => ({
             month,
             camps,
@@ -377,7 +429,6 @@ const getCampPatientTotalCounts = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
-
 
 
 

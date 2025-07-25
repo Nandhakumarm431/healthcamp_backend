@@ -9,6 +9,6 @@ module.exports = app => {
     app.get('/getOneVolunteerDet/:id', volunterAPI.getOneVolunteerDetail)
     // app.get('/getCampVolunteer/:id',volunterAPI.getCampbasedVolunteerDetls)
     app.put('/updateVolunteer/:id', volunterAPI.updateVolunteerDtl)
-    app.put('/deleteVolunteer/:id', volunterAPI.deleteVolunteer)
+    app.put('/deleteVolunteer/:id', [verifyToken, isAdmin], volunterAPI.deleteVolunteer)
 
 }

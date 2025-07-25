@@ -9,13 +9,10 @@ const { getNextSerialNumber } = require('./SerialNumber.controller');
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 var validator = require("node-email-validation");
-// Email handler
 const nodemailer = require("nodemailer")
-//unique string
 const { v4: uuidv4 } = require("uuid")
-//env variables
 require('dotenv').config();
-//node mailer stuff
+
 let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -23,6 +20,7 @@ let transporter = nodemailer.createTransport({
     pass: process.env.AUTH_PASS,
   }
 })
+
 // Email configuration verify
 
 // transporter.verify((error, success) => {
@@ -33,6 +31,7 @@ let transporter = nodemailer.createTransport({
 //     console.log(success);
 //   }
 // })
+
 exports.signup = async (req, res) => {
   if (!req.body.fullName || !req.body.email || !req.body.password) {
     res.json({
@@ -83,6 +82,7 @@ exports.signup = async (req, res) => {
       });
   }
 };
+
 const sendOTPVerificationEmail = async ({ id, email }, res) => {
   try {
     const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
@@ -127,6 +127,7 @@ const sendOTPVerificationEmail = async ({ id, email }, res) => {
     });
   }
 }
+
 exports.verifyOTP = (req, res) => {
   try {
     let { userID, otp } = req.body;
@@ -195,6 +196,7 @@ exports.verifyOTP = (req, res) => {
     });
   }
 }
+
 exports.signin = (req, res) => {
   User.findOne({
     where: {
@@ -257,6 +259,7 @@ exports.signin = (req, res) => {
       });
     });
 };
+
 exports.getuserName = (req, res) => {
   User.findOne({
     where: { id: req.body.id },
@@ -278,6 +281,7 @@ exports.getuserName = (req, res) => {
     });
   });
 };
+
 exports.forgetPassword = (req, res) => {
   if (!req.body.email) {
     res.json({
@@ -320,6 +324,7 @@ exports.forgetPassword = (req, res) => {
     });
   }
 }
+
 exports.verifyResetPWDOTP = (req, res) => {
   try {
     let { userID, otp } = req.body;
@@ -390,6 +395,7 @@ exports.verifyResetPWDOTP = (req, res) => {
     });
   }
 }
+
 exports.passwordChange = (req, res) => {
   User.findOne({ where: { id: req.body.id } })
     .then(async user => {

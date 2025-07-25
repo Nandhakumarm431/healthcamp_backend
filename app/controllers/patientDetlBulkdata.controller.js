@@ -1,90 +1,99 @@
 const readXlsxFile = require('read-excel-file/node');
-const bcrypt = require('bcryptjs'); // Ensure bcrypt is installed
-
+const bcrypt = require('bcryptjs');
 const { getNextSerialNumber } = require('./SerialNumber.controller');
 const db = require('../models');
 const Utils = require('../utill/Utils');
+const axios = require('axios');
 
-const patientDetlsDB = db.patientDetls
-const campDB = db.campPlanning
-const userDB = db.user
-const RoleDB = db.role
+const patientDetlsDB = db.patientDetls;
+const campDB = db.campPlanning;
+const userDB = db.user;
+const RoleDB = db.role;
 
 const patientDetUpload = async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).send("Please upload an Excel file!");
         }
-
+        const file = req.file;
         const userid = req.body.userid;
-        const path = `${__basedir}/resources/static/assets/uploads/${req.file.filename}`;
+        // const path = `${__basedir}/resources/static/assets/uploads/${req.file.filename}`;
+        let fileUrl;
+        fileUrl = file.location;
+
+        const lambdaUrl = process.env.AWS_LAMBDA_URL_DOWNLOAD_FILE;
+
+        // Request presigned URL from Lambda function
+        const lambdaResponse = await axios.post(lambdaUrl, { file_path: file.name });
+
+        if (!lambdaResponse.data || !lambdaResponse.data.download_url) {
+            console.error(`Failed to fetch presigned URL for file: ${file.name}`);
+            return res.status(500).send({ error: "Failed to fetch presigned URL" });
+        }
+
+        const presignedUrl = lambdaResponse.data.download_url;
+
+        // Fetch file from S3 using presigned URL
+        const fileResponse = await axios.get(presignedUrl, { responseType: "arraybuffer" });
+        const fileBuffer = Buffer.from(fileResponse.data);
 
         // Read the Excel file
-        const rows = await readXlsxFile(path);
+        const rows = await readXlsxFile(fileBuffer);
         if (!rows.length) {
             return res.status(400).send("Excel file is empty or improperly formatted.");
         }
 
-        // Skip the header
+        // Skip the header row
         rows.shift();
 
-        const prefixU = 'NHU';
-        const prefix = 'NHP';
+        const prefixU = 'HCU';
+        const prefix = 'HCP';
 
-        // Fetch role data for patients
-        const roleData = await RoleDB.findOne({
-            where: { name: 'Patient' },
-            attributes: ['id']
-        });
-
+        // Fetch the 'Patient' role data
+        const roleData = await RoleDB.findOne({ where: { name: 'Patient' }, attributes: ['id'] });
         if (!roleData) {
             return res.status(404).send({ message: "Role 'Patient' not found." });
         }
 
+        // Pre-validation: Ensure all required fields are present and valid
+        for (const row of rows) {
+            const [_, fullName, age, gender, contactNo, reasonForVisiting, campID] = row;
 
+            if (!fullName || !age || !contactNo || !campID) {
+                return res.status(400).send({
+                    message: "Each record must contain 'Full Name','age', 'Contact No', and 'Camp ID'."
+                });
+            }
 
+            // Validate Camp ID
+            const campExists = await campDB.findOne({ where: { campID } });
+
+            if (!campExists) {
+                return res.status(400).send({
+                    message: `Camp ID ${campID} not found. No records will be added.`
+                });
+            }
+
+            // Validate Mobile Number
+            const isValidMobile = Utils.validateMobileNum(contactNo);
+            if (!isValidMobile) {
+                return res.status(400).send({
+                    message: `Mobile number ${contactNo} is not valid. Please correct it.`
+                });
+            }
+        }
+
+        // All validations passed, proceed with insertion
         for (const row of rows) {
             const [_, fullName, age, gender, contactNo, reasonForVisiting, campID] = row;
 
             const formattedContactNo = contactNo === 'NA' ? '' : contactNo;
             const formattedAge = age === 'NA' ? null : age;
-
-            let formattedGender;
-            switch (gender) {
-                case 'M':
-                    formattedGender = 'male';
-                    break;
-                case 'F':
-                    formattedGender = 'female';
-                    break;
-                default:
-                    formattedGender = 'others';
-                    break;
-            }
-
-
-            if (!fullName && !contactNo && !campID) {
-                return res.status(400).send({
-                    message: "Please add Patient fullname, Contact No, and Camp ID to upload the data."
-                });
-            }
-
-            if (campID) {
-                const camp = await campDB.findOne({ where: { campID: campID } });
-                if (!camp) {
-                    return res.status(400).send({ message: "Camp ID not found. No record will be added related to incorrect Camp ID." });
-                }
-            }
-            const validMobile = Utils.validateMobileNum(contactNo)
-            if (!validMobile) {
-                res.status(400).send({
-                    message: "Mobile number not valid. Please check your mobile number!"
-                })
-            }
-
+            const formattedGender = gender === 'M' ? 'male' : gender === 'F' ? 'female' : 'others';
 
             const AutoUserID = await getNextSerialNumber(prefixU);
             const createPassword = `${fullName.substring(0, 4)}${AutoUserID}`;
+
             const userDetl = {
                 userID: AutoUserID,
                 fullName,
@@ -96,10 +105,10 @@ const patientDetUpload = async (req, res) => {
                 isActive: true,
                 isDeleted: false
             };
-            const data = await userDB.create(userDetl);
 
-
+            const userRecord = await userDB.create(userDetl);
             const serialNumber = await getNextSerialNumber(prefix);
+
             const patient_detail = {
                 patientID: serialNumber,
                 patientFullName: fullName,
@@ -111,21 +120,17 @@ const patientDetUpload = async (req, res) => {
                 userId: userid,
                 activeStatus: true
             };
+
             const patientNew = await patientDetlsDB.create(patient_detail);
-
-
-            if (campID) {
-                const camp = await campDB.findOne({ where: { campID: campID } });
-                if (camp && patientNew) {
-                    await camp.addPatientDetls(patientNew);
-                }
+            const camp = await campDB.findOne({ where: { campID } });
+            if (camp && patientNew) {
+                await camp.addPatientDetls(patientNew);
             }
         }
 
         res.status(200).send({
             message: "Uploaded the file successfully: " + req.file.originalname,
         });
-
     } catch (error) {
         console.error(error);
         res.status(500).send({
