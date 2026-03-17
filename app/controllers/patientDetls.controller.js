@@ -91,7 +91,7 @@ const addPatientDetls = async (req, res) => {
                     created_by: req.body.created_by,
                     activeStatus: true
                 }).then(patientDet => {
-                    if (req.body.campId !== undefined) {
+                    if (req.body.campId !== undefined) { 
                         campDB.findOne({
                             where: { id: req.body.campId }
                         }).then(camp => {
@@ -102,7 +102,7 @@ const addPatientDetls = async (req, res) => {
                                     }
                                 }).then(patient => {
                                     camp.addPatientDetls(patient).then(() => {
-                                        // const smsResult = sendsms(patient.contactNo, patient.fullName, patient.patientID)
+                                        const smsResult = sendsms(patient.contactNo, patient.fullName, patient.patientID)
                                         res.json({
                                             status: "SUCCESS",
                                             message: "Patient registered successfully!"

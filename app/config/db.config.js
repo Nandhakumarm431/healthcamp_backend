@@ -9,13 +9,13 @@ module.exports = {
   dialect: process.env.DB_DIALECT,
   ssl: true,
   port: 3306,
-  // dialectOptions: {
-  //   ssl: {
-  //     require: true,
-  //     rejectUnauthorized: false,
-  //     ca: fs.readFileSync(__basedir + "/resources/static/certificate/BaltimoreCyberTrustRoot.crt.pem")
-  //   }
-  // },
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+      ca: fs.readFileSync(__basedir + "/resources/static/certificate/BaltimoreCyberTrustRoot.crt.pem")
+    }
+  },
   pool: {
     max: 5,
     min: 0,
