@@ -39,7 +39,11 @@ require('./app/routes/inventoryDet.routes')(app)
 require('./app/routes/bloodGroup.routes')(app)
 
 
+<<<<<<< HEAD
 const PORT = process.env.PORT || 8080;
+=======
+const PORT = process.env.PORT || 5000;
+>>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 })

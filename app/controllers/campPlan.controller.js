@@ -13,7 +13,10 @@ const readXlsxFile = require("read-excel-file/node");
 const fs = require("fs");
 const csv = require("fast-csv");
 const Utils = require('../utill/Utils');
+<<<<<<< HEAD
 
+=======
+>>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 const addCampDetails = async (req, res) => {
     if (!req.body.campName || !req.body.campDate
         || !req.body.startTime || !req.body.endTime || !req.body.street
@@ -29,7 +32,11 @@ const addCampDetails = async (req, res) => {
         });
     } else {
         try {
+<<<<<<< HEAD
             const prefix = 'NHC'
+=======
+            const prefix = 'HCC'
+>>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
             const serialNumber = await getNextSerialNumber(prefix);
             // const timeSlots = Utils.createTimeSlots(req.body.startTime, req.body.endTime);
             let payload = {
@@ -66,7 +73,10 @@ const addCampDetails = async (req, res) => {
         }
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 const getAllCampDetails = async (req, res) => {
     try {
         let campdet = await CampPlanDet.findAll({
@@ -91,7 +101,10 @@ const getAllCampDetails = async (req, res) => {
         });
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 const getAllCampNames = async (req, res) => {
     try {
         let campdet = await CampPlanDet.findAll({
@@ -107,7 +120,10 @@ const getAllCampNames = async (req, res) => {
         });
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 const getOneCampName = async (req, res) => {
     let id = req.params.id
     try {
@@ -127,7 +143,10 @@ const getOneCampName = async (req, res) => {
         });
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 const getOneCampDet = async (req, res) => {
     let id = req.params.id
     try {
