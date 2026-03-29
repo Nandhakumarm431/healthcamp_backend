@@ -36,11 +36,8 @@ const addPatientDetls = async (req, res) => {
                     message: "Invalid Age. Age cannot be negative."
                 });
             } else {
-<<<<<<< HEAD
+
                 const prefixU = 'NHU'
-=======
-                const prefixU = 'HCU'
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
                 const AutoUserID = await getNextSerialNumber(prefixU);
                 var createPassword = req.body.patientFullName.substring(0, 4) + AutoUserID
                 let zipcode = Utils.preprocessZipcode(req.body.zipCode)
@@ -95,11 +92,8 @@ const addPatientDetls = async (req, res) => {
                     created_by: req.body.created_by,
                     activeStatus: true
                 }).then(patientDet => {
-<<<<<<< HEAD
+
                     if (req.body.campId !== undefined) { 
-=======
-                    if (req.body.campId !== undefined) {
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
                         campDB.findOne({
                             where: { id: req.body.campId }
                         }).then(camp => {
@@ -110,11 +104,9 @@ const addPatientDetls = async (req, res) => {
                                     }
                                 }).then(patient => {
                                     camp.addPatientDetls(patient).then(() => {
-<<<<<<< HEAD
+
                                         const smsResult = sendsms(patient.contactNo, patient.fullName, patient.patientID)
-=======
                                         // const smsResult = sendsms(patient.contactNo, patient.fullName, patient.patientID)
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
                                         res.json({
                                             status: "SUCCESS",
                                             message: "Patient registered successfully!"
@@ -294,13 +286,9 @@ const patientDetUpload = async (req, res) => {
         readXlsxFile(path).then(async (rows) => {
             // skip header
             rows.shift();
-<<<<<<< HEAD
+
             const prefix = 'NHP'
             const prefixU = 'NHU'
-=======
-            const prefix = 'HCP'
-            const prefixU = 'HCU'
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
             let roleData = await RoleDB.findOne({
                 where: { name: 'Patient' }, attributes: ['id']
             })

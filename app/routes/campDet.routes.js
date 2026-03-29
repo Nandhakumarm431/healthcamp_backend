@@ -1,7 +1,6 @@
 module.exports = app => {
     const campDetAPI = require('../controllers/campPlan.controller.js')
 
-    const upload = require("../middleware/upload.js");
     const uploadcsv = require("../middleware/uploadcsv.js");
 
 

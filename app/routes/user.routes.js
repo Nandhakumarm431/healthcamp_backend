@@ -22,12 +22,9 @@ module.exports = app => {
     app.get('/getVolunteerRoles', userAPI.getVolunteerRoles)
     app.put('/updateUser/:id', userAPI.updateuserDetls)
     app.get('/getUser/:id', userAPI.getOneUserData)
-<<<<<<< HEAD
-    app.put('/deleteUser/:id', [verifyToken, isAdmin], userAPI.deleteCampDet)
-=======
-    app.put('/deleteUser/:id', userAPI.deleteCampDet)
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 
+    app.put('/deleteUser/:id', [verifyToken, isAdmin], userAPI.deleteCampDet)
+    app.put('/deleteUser/:id', userAPI.deleteCampDet)
     app.get('/roleUserCount', userAPI.getRoleUsersCount);
     app.get('/users/count-by-month', userAPI.getUserCountsMonthbased);
     app.get('/campPatient/count-by-month', userAPI.getCampPatientTotalCounts);

@@ -1,12 +1,10 @@
 const db = require('../models')
-<<<<<<< HEAD
+
 const patientDetlsDB = db.patientDetls
 const patientReportDB = db.patientReports
 const { BlobServiceClient } = require('@azure/storage-blob');
 
 const AZURE_STORAGE_CONNECTION_STRING = process.env.BLOB_STORAGE_ACC
-
-
 
 async function createContainerIfNotExists(containerName) {
 
@@ -23,7 +21,6 @@ async function createContainerIfNotExists(containerName) {
     }
     return containerClient;
 }
-
 
 const uploadPatientReports = async (req, res) => {
     try {
@@ -78,61 +75,6 @@ const uploadPatientReports = async (req, res) => {
     }
 
 }
-
-
-module.exports = {
-    uploadPatientReports
-=======
-const patientDB = db.patientDetls
-const patientReportDB = db.patientReports
-const fs = require('fs');
-const path = require('path');
-const AWS = require('aws-sdk');
-const axios = require('axios');
-
-AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION || 'us-east-1',
-});
-const s3 = new AWS.S3();
-
-const uploadPatientReports = async (req, res) => {
-    try {
-        const file = req.file;
-        const { patientID, reportType, description, userId } = req.body;
-
-        if (!file || !patientID) {
-            return res.status(400).send('Files and patientID are required.');
-        }
-        patientDB.findOne({
-            where: {
-                patientID: patientID
-            }
-        }).then(async patient => {
-            let fileUrl;
-            fileUrl = file.location;
-            const newReport = await patientReportDB.create({
-                patientDetlId: patient.id,
-                reportFileName: file.name,
-                reportFilePath: file.path,
-                reporDownloadtUrl: fileUrl,
-                reportType: reportType,
-                description: description,
-                reportfileSize: file.size,
-                userId: userId,
-                uploadedBy: userId,
-                isDeleted: false,
-                reportUploadDate: new Date()
-            });
-
-            res.status(200).json(newReport);
-        })
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: error.message });
-    }
-};
 
 const downloadReports = async (req, res) => {
     try {
@@ -221,5 +163,4 @@ module.exports = {
     downloadAttachments,
     downloadReports,
     deleteAttachment
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 }

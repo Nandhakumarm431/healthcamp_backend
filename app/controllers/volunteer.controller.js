@@ -46,21 +46,12 @@ const addVolunteerDetls = async (req, res) => {
                     where: { name: 'Volunteer' }, attributes: ['id']
                 })
 
-<<<<<<< HEAD
+
                 const prefix = 'NHU'
-=======
-                const prefix = 'HCU'
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
                 const serialNumber = await getNextSerialNumber(prefix);
                 var createPassword = req.body.fullName.substring(0, 4) + serialNumber
 
                 let zipcode = Utils.preprocessZipcode(req.body.zipCode)
-<<<<<<< HEAD
-=======
-                console.log('zipcode',zipcode);
-                
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
-
                 let dateofBirth = req.body.dateOfBirth;
                 if (!dateofBirth || !Utils.isValidDate(dateofBirth)) {
                     dateofBirth = null;
@@ -87,11 +78,8 @@ const addVolunteerDetls = async (req, res) => {
                 }
                 const data = await userDB.create(userDetl);
 
-<<<<<<< HEAD
+
                 const prefixV = 'NHV'
-=======
-                const prefixV = 'HCV'
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
                 const serialVNumber = await getNextSerialNumber(prefixV);
 
                 volunteerDB.create({

@@ -9,12 +9,7 @@ const { getNextSerialNumber } = require('./SerialNumber.controller');
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 var validator = require("node-email-validation");
-<<<<<<< HEAD
-const nodemailer = require("nodemailer")
-const { v4: uuidv4 } = require("uuid")
-require('dotenv').config();
 
-=======
 // Email handler
 const nodemailer = require("nodemailer")
 //unique string
@@ -22,7 +17,6 @@ const { v4: uuidv4 } = require("uuid")
 //env variables
 require('dotenv').config();
 //node mailer stuff
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -30,10 +24,7 @@ let transporter = nodemailer.createTransport({
     pass: process.env.AUTH_PASS,
   }
 })
-<<<<<<< HEAD
 
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 // Email configuration verify
 
 // transporter.verify((error, success) => {
@@ -44,10 +35,7 @@ let transporter = nodemailer.createTransport({
 //     console.log(success);
 //   }
 // })
-<<<<<<< HEAD
 
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 exports.signup = async (req, res) => {
   if (!req.body.fullName || !req.body.email || !req.body.password) {
     res.json({
@@ -67,11 +55,8 @@ exports.signup = async (req, res) => {
   //   });
   // }
   else {
-<<<<<<< HEAD
+
     const prefix = 'NHU'
-=======
-    const prefix = 'HCU'
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
     const serialNumber = await getNextSerialNumber(prefix);
     User.create({
       userID: serialNumber,
@@ -102,10 +87,7 @@ exports.signup = async (req, res) => {
       });
   }
 };
-<<<<<<< HEAD
 
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 const sendOTPVerificationEmail = async ({ id, email }, res) => {
   try {
     const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
@@ -150,10 +132,7 @@ const sendOTPVerificationEmail = async ({ id, email }, res) => {
     });
   }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 exports.verifyOTP = (req, res) => {
   try {
     let { userID, otp } = req.body;
@@ -222,10 +201,7 @@ exports.verifyOTP = (req, res) => {
     });
   }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 exports.signin = (req, res) => {
   User.findOne({
     where: {
@@ -288,10 +264,7 @@ exports.signin = (req, res) => {
       });
     });
 };
-<<<<<<< HEAD
 
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 exports.getuserName = (req, res) => {
   User.findOne({
     where: { id: req.body.id },
@@ -313,10 +286,7 @@ exports.getuserName = (req, res) => {
     });
   });
 };
-<<<<<<< HEAD
 
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 exports.forgetPassword = (req, res) => {
   if (!req.body.email) {
     res.json({
@@ -359,10 +329,7 @@ exports.forgetPassword = (req, res) => {
     });
   }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 exports.verifyResetPWDOTP = (req, res) => {
   try {
     let { userID, otp } = req.body;
@@ -433,10 +400,7 @@ exports.verifyResetPWDOTP = (req, res) => {
     });
   }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 exports.passwordChange = (req, res) => {
   User.findOne({ where: { id: req.body.id } })
     .then(async user => {

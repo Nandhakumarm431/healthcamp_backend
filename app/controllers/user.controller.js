@@ -57,11 +57,8 @@ const adduserDetls = async (req, res) => {
                 const dobDate = new Date();
                 const yearDate = dobDate.getFullYear();
                 var createPassword = req.body.fullName.substring(0, 4) + yearDate
-<<<<<<< HEAD
+
                 const prefix = 'NHU'
-=======
-                const prefix = 'HCU'
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
                 const serialNumber = await getNextSerialNumber(prefix);
 
 
@@ -332,7 +329,7 @@ const getUserCountsMonthbased = async (req, res) => {
     }
 }
 
-<<<<<<< HEAD
+
 //for Posgresql DB query
 // const getCampPatientTotalCounts = async (req, res) => {
 //     try {
@@ -385,25 +382,21 @@ const getUserCountsMonthbased = async (req, res) => {
 // };
 
 //for MySql DB query
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 const getCampPatientTotalCounts = async (req, res) => {
     try {
         const campData = await db.campPlanning.findAll({
             attributes: [
-<<<<<<< HEAD
+
                 [Sequelize.fn('DATE_FORMAT', Sequelize.col('campDate'), '%Y-%m'), 'month'],
                 'campName',
-=======
                 [Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('campDate')), 'month'], // Group by truncated month
                 'campName', // Include camp name
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
                 [Sequelize.fn('COUNT', Sequelize.col('patientDetls->patients_camps.patientId')), 'patientCount'],
             ],
             include: [
                 {
                     model: db.patientDetls,
-<<<<<<< HEAD
+
                     through: { attributes: [] },
                     attributes: [],
                 },
@@ -416,27 +409,9 @@ const getCampPatientTotalCounts = async (req, res) => {
             order: [[Sequelize.fn('DATE_FORMAT', Sequelize.col('campDate'), '%Y-%m'), 'DESC']],
         });
 
-        const groupedData = campData.reduce((acc, camp) => {
-            const monthStr = camp.dataValues.month; // 'YYYY-MM'
-            const dateObj = new Date(monthStr + '-01');
-            const month = dateObj.toLocaleString('default', { month: 'long', year: 'numeric' });
-=======
-                    through: { attributes: [] }, // Exclude fields from the junction table
-                    attributes: [], // Exclude patient fields
-                },
-            ],
-            group: [
-                Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('campDate')), // Month grouping
-                'campPlanningDet.campName', // Group by camp name
-                'campPlanningDet.id', // Group by the primary key of campPlanning
-            ],
-            order: [[Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('campDate')), 'DESC']],
-        });
-
         // Format the data into the desired structure
         const groupedData = campData.reduce((acc, camp) => {
             const month = camp.dataValues.month.toLocaleString('default', { month: 'long' }); // Convert to month name
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
             const campName = camp.campName;
             const patientCount = parseInt(camp.dataValues.patientCount, 10);
 
@@ -448,10 +423,8 @@ const getCampPatientTotalCounts = async (req, res) => {
             return acc;
         }, {});
 
-<<<<<<< HEAD
-=======
+
         // Transform grouped data into the final structure
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
         const result = Object.entries(groupedData).map(([month, camps]) => ({
             month,
             camps,
@@ -464,12 +437,6 @@ const getCampPatientTotalCounts = async (req, res) => {
     }
 };
 
-
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 module.exports = {
     adduserDetls, getOneUserData,
     updateuserDetls,

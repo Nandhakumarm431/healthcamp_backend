@@ -23,24 +23,13 @@ module.exports = app => {
 
     app.post("/uploadCSV", uploadcsv.single("file"), patientDetAPI.csvUpload);
 
-<<<<<<< HEAD
-    
     // const patientBulkUploadAPI = require('../controllers/patientDetlBulkdata.controller.js')
-    
     // app.post("/patientUpload", uploadMiddleware, patientBulkUploadAPI.patientDetUpload);
+
     // app.post("/uploadReport", uploadReports, patientReportAPI.uploadPatientReports);
     // app.get('/getPatientReports/:patientID', patientReportAPI.getAllPatientReports)
     // app.post("/downloadattachment", patientReportAPI.downloadAttachments);
     // app.put('/deleteAttachment/:id', patientReportAPI.deleteAttachment)
-=======
-    const patientBulkUploadAPI = require('../controllers/patientDetlBulkdata.controller.js')
-    app.post("/patientUpload", uploadMiddleware, patientBulkUploadAPI.patientDetUpload);
-
-    app.post("/uploadReport", uploadReports, patientReportAPI.uploadPatientReports);
-    app.get('/getPatientReports/:patientID', patientReportAPI.getAllPatientReports)
-    app.post("/downloadattachment", patientReportAPI.downloadAttachments);
-    app.put('/deleteAttachment/:id', patientReportAPI.deleteAttachment)
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 
 
 }

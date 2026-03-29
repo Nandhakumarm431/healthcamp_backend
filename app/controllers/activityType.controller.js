@@ -1,9 +1,6 @@
 const db = require('../models')
 const activityTypes = db.actvityTypes;
-<<<<<<< HEAD
 
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 const addTypes = async (req, res) => {
     let payload = {
         activityName: req.body.activityName,
@@ -18,11 +15,8 @@ const addTypes = async (req, res) => {
                 message: "Empty Input fields!"
             });
         }
-<<<<<<< HEAD
+
         else if (existData) { 
-=======
-        else if (existData) {
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
             res.json({
                 status: "FAILED",
                 message: "Activity type already present!"
@@ -41,10 +35,7 @@ const addTypes = async (req, res) => {
         });
     }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 const getActivityDet = async (req, res) => {
     try {
         let actvityDet = await activityTypes.findAll()
@@ -56,10 +47,7 @@ const getActivityDet = async (req, res) => {
         });
     }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 const updateActivities = async (req, res) => {
     let id = req.params.id
     try {
@@ -75,10 +63,6 @@ const updateActivities = async (req, res) => {
         });
     }
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 const deleteActivities = async (req, res) => {
     let id = req.params.id
     try {
@@ -94,11 +78,6 @@ const deleteActivities = async (req, res) => {
         });
     }
 }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 602f9544cf77b66764ab0effc52c232aff4ae25c
 module.exports = {
     addTypes,
     getActivityDet,

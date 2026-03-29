@@ -31,10 +31,5 @@ module.exports = function(app) {
 
 
 
-  // app.get("/verify:id:uniqueString",controller.verifyEmail);
-
-  // app.get("verified",(req,res)=>{
-  //   res.sendFile(path.join(__dirname,"./../views/verified.html"));
-  // })
 
 };
